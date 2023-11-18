@@ -18,8 +18,8 @@ dockers:
     goarch: amd64
     dockerfile: "goreleaser.dockerfile"
     image_templates:
-      - "tuhis/edge-receiver:latest"
-      - "tuhis/edge-receiver:{{ .Tag }}"
+      - "ghcr.io/tuhis/edge-receiver:latest"
+      - "ghcr.io/tuhis/edge-receiver:{{ .Tag }}"
 checksum:
   name_template: 'checksums.txt'
 snapshot:
