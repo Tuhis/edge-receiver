@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/segmentio/kafka-go"
+	"github.com/segmentio/kafka-go/sasl/scram"
 	"go.uber.org/zap"
 )
 
@@ -29,10 +30,20 @@ type IKafkaProducer interface {
 	ProduceMessagesFromChan(messages <-chan string, topic string)
 }
 
+type AuthMechanism string
+
+const (
+	AuthMechanismPlain AuthMechanism = "PLAIN"
+	AuthMechanismScram AuthMechanism = "SCRAM-SHA-256"
+)
+
 type envConfig struct {
-	Brokers     string
-	StatusTopic string
-	OwnName     string
+	Brokers       string
+	StatusTopic   string
+	OwnName       string
+	AuthMechanism AuthMechanism
+	Username      string
+	Password      string
 }
 
 func NewKafkaProducer(logger *zap.SugaredLogger) IKafkaProducer {
@@ -42,6 +53,17 @@ func NewKafkaProducer(logger *zap.SugaredLogger) IKafkaProducer {
 	if err != nil {
 		logger.Errorf("Failed to read configuration from environment: %v", err)
 		panic(err)
+	}
+
+	transport := &kafka.Transport{}
+
+	if config.AuthMechanism == AuthMechanismScram {
+		mechanism, err := scram.Mechanism(scram.SHA512, config.Username, config.Password)
+		if err != nil {
+			panic(err)
+		}
+
+		transport.SASL = mechanism
 	}
 
 	kafkaWriter := &kafka.Writer{
@@ -54,6 +76,7 @@ func NewKafkaProducer(logger *zap.SugaredLogger) IKafkaProducer {
 		AllowAutoTopicCreation: false,
 		Async:                  true,
 		Completion:             completionHandlerWithLogger(logger),
+		Transport:              transport, // Use the custom transport
 	}
 
 	// Test the writer
@@ -81,16 +104,44 @@ func configFromEnvironment() (*envConfig, error) {
 	brokers := os.Getenv("KAFKA_BROKERS")
 	statusTopic := os.Getenv("KAFKA_STATUS_TOPIC")
 	ownName := os.Getenv("OWN_NAME")
+	authMechanismStr := os.Getenv("KAFKA_AUTH_MECHANISM")
+	username := os.Getenv("KAFKA_USERNAME")
+	password := os.Getenv("KAFKA_PASSWORD")
 
 	if brokers == "" || statusTopic == "" || ownName == "" {
 		return nil, errors.New("KAFKA_BROKERS, KAFKA_STATUS_TOPIC and OWN_NAME must be set")
 	}
 
+	authMechanism, err := parseAuthMechanism(authMechanismStr)
+	if err != nil {
+		return nil, err
+	}
+
+	if authMechanism == AuthMechanismScram {
+		if username == "" || password == "" {
+			return nil, errors.New("KAFKA_USERNAME and KAFKA_PASSWORD must be set for SCRAM authentication")
+		}
+	}
+
 	return &envConfig{
-		Brokers:     brokers,
-		StatusTopic: statusTopic,
-		OwnName:     ownName,
+		Brokers:       brokers,
+		StatusTopic:   statusTopic,
+		OwnName:       ownName,
+		AuthMechanism: authMechanism,
+		Username:      username,
+		Password:      password,
 	}, nil
+}
+
+func parseAuthMechanism(s string) (AuthMechanism, error) {
+	switch s {
+	case string(AuthMechanismPlain), "":
+		return AuthMechanismPlain, nil
+	case string(AuthMechanismScram):
+		return AuthMechanismScram, nil
+	default:
+		return "", errors.New("invalid auth mechanism: " + s)
+	}
 }
 
 func completionHandlerWithLogger(logger *zap.SugaredLogger) func([]kafka.Message, error) {

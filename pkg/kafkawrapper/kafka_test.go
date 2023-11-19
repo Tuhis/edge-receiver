@@ -12,12 +12,41 @@ import (
 
 func TestConfigFromEnvironment(t *testing.T) {
 	tests := []struct {
-		name        string
-		brokers     string
-		statusTopic string
-		ownName     string
-		wantErr     bool
+		name          string
+		brokers       string
+		statusTopic   string
+		ownName       string
+		authMechanism string
+		username      string
+		password      string
+		wantErr       bool
 	}{
+		{
+			name:          "All environment variables set, PLAIN auth",
+			brokers:       "localhost:9092",
+			statusTopic:   "status",
+			ownName:       "test",
+			authMechanism: "PLAIN",
+			wantErr:       false,
+		},
+		{
+			name:          "All environment variables set, SCRAM auth",
+			brokers:       "localhost:9092",
+			statusTopic:   "status",
+			ownName:       "test",
+			authMechanism: "SCRAM-SHA-256",
+			username:      "user",
+			password:      "pass",
+			wantErr:       false,
+		},
+		{
+			name:          "Missing KAFKA_USERNAME and KAFKA_PASSWORD for SCRAM auth",
+			brokers:       "localhost:9092",
+			statusTopic:   "status",
+			ownName:       "test",
+			authMechanism: "SCRAM-SHA-256",
+			wantErr:       true,
+		},
 		{
 			name:        "All environment variables set",
 			brokers:     "localhost:9092",
@@ -50,6 +79,9 @@ func TestConfigFromEnvironment(t *testing.T) {
 			os.Setenv("KAFKA_BROKERS", tt.brokers)
 			os.Setenv("KAFKA_STATUS_TOPIC", tt.statusTopic)
 			os.Setenv("OWN_NAME", tt.ownName)
+			os.Setenv("KAFKA_AUTH_MECHANISM", tt.authMechanism)
+			os.Setenv("KAFKA_USERNAME", tt.username)
+			os.Setenv("KAFKA_PASSWORD", tt.password)
 
 			_, err := configFromEnvironment()
 

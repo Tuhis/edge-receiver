@@ -6,7 +6,7 @@
 # Executables
 *.exe
 *.out
-edge-receiver
+/edge-receiver
 !cmd/edge-receiver
 
 # Go binary
