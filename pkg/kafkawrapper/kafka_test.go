@@ -34,7 +34,7 @@ func TestConfigFromEnvironment(t *testing.T) {
 			brokers:       "localhost:9092",
 			statusTopic:   "status",
 			ownName:       "test",
-			authMechanism: "SCRAM-SHA-256",
+			authMechanism: "SCRAM-SHA-512",
 			username:      "user",
 			password:      "pass",
 			wantErr:       false,
@@ -44,7 +44,7 @@ func TestConfigFromEnvironment(t *testing.T) {
 			brokers:       "localhost:9092",
 			statusTopic:   "status",
 			ownName:       "test",
-			authMechanism: "SCRAM-SHA-256",
+			authMechanism: "SCRAM-SHA-512",
 			wantErr:       true,
 		},
 		{

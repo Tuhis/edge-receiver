@@ -61,6 +61,12 @@ spec:
               value: "{{ .Values.kafka.statusTopic }}"
             - name: "KAFKA_INGRESS_TOPIC"
               value: "{{ .Values.kafka.ingressTopic }}"
+            - name: "KAFKA_AUTH_MECHANISM"
+              value: "{{ .Values.kafka.auth.mechanism }}"
+            - name: "KAFKA_USERNAME"
+              value: "{{ .Values.kafka.auth.username }}"
+            - name: "KAFKA_PASSWORD"
+              value: "{{ .Values.kafka.auth.password }}"
             - name: "OWN_NAME"
               valueFrom:
                 fieldRef:

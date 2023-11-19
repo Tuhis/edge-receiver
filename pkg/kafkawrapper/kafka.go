@@ -34,7 +34,7 @@ type AuthMechanism string
 
 const (
 	AuthMechanismPlain AuthMechanism = "PLAIN"
-	AuthMechanismScram AuthMechanism = "SCRAM-SHA-256"
+	AuthMechanismScram AuthMechanism = "SCRAM-SHA-512"
 )
 
 type envConfig struct {

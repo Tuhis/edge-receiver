@@ -56,3 +56,7 @@ kafka:
   broker: iot-kafka-kafka-bootstrap:9092
   statusTopic: "service-status"
   ingressTopic: "ruuvi-event-ingress"
+  auth:
+    mechanism: "PLAIN" # No authentincation, or "SCRAM-SHA-512" for user/pass
+    username: "user"
+    password: "password"
