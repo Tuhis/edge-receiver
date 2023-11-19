@@ -89,7 +89,7 @@ jobs:
         id: repolc
         run: echo "REPO_LC=$(echo ${REPO} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
         env:
-          REPO: '${{ github.repository_owner }}'
+          REPO: '${{ github.repository }}'
 
       - name: Package and publish Helm chart
         run: |
