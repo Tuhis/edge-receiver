@@ -7,7 +7,7 @@ on:
 
 jobs:
   semanticrelease:
-    runs-on: ioio-k8s
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
 
   goreleaser:
     needs: semanticrelease
-    runs-on: ioio-k8s
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
@@ -63,7 +63,7 @@ jobs:
 
   helmrelease:
     needs: semanticrelease
-    runs-on: ioio-k8s
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
