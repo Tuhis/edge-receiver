@@ -87,11 +87,11 @@ jobs:
 
       - name: Set lower case version of username
         id: repolc
-        run: echo "REPO_LC=$(echo ${REPO} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+        run: echo "USER_LC=$(echo ${REPO} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
         env:
-          REPO: '${{ github.repository }}'
+          REPO: '${{ github.repository_owner }}'
 
       - name: Package and publish Helm chart
         run: |
             helm package deploy/edge-receiver --version ${{ steps.latesttag.outputs.tag }}
-            helm push edge-receiver-${{ steps.latesttag.outputs.tag }}.tgz oci://ghcr.io/${{ steps.repolc.outputs.REPO_LC }}/edge-receiver-chart
+            helm push edge-receiver-${{ steps.latesttag.outputs.tag }}.tgz oci://ghcr.io/${{ steps.repolc.outputs.USER_LC }}/charts
