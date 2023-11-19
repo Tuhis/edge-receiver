@@ -88,4 +88,4 @@ jobs:
       - name: Package and publish Helm chart
         run: |
             helm package deploy/edge-receiver --version ${{ steps.latesttag.outputs.tag }}
-            helm push edge-receiver-${{ steps.latesttag.outputs.tag }}.tgz ghcr.io/${{ github.repository }}/edge-receiver-chart:${{ steps.latesttag.outputs.tag }}
+            helm push edge-receiver-${{ steps.latesttag.outputs.tag }}.tgz oci://ghcr.io/${{ github.repository }}/edge-receiver-chart:${{ steps.latesttag.outputs.tag }}
