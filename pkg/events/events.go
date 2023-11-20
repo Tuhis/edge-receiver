@@ -33,6 +33,26 @@ type NewMeasurementData struct {
 	LocalName *string `json:"LocalName"`
 }
 
+type NewMeasurementDataNoPtr struct {
+	DataFormat   int     `json:"DataFormat"`
+	Temperature  float64 `json:"Temperature"`
+	Humidity     float64 `json:"Humidity"`
+	Pressure     int     `json:"Pressure"`
+	Acceleration struct {
+		X int `json:"X"`
+		Y int `json:"Y"`
+		Z int `json:"Z"`
+	} `json:"Acceleration"`
+	Battery   int    `json:"Battery"`
+	TXPower   int    `json:"TXPower"`
+	Movement  int    `json:"Movement"`
+	Sequence  int    `json:"Sequence"`
+	MAC       string `json:"MAC"`
+	RSSI      int    `json:"RSSI"`
+	Address   string `json:"Address"`
+	LocalName string `json:"LocalName"`
+}
+
 // IsValid checks if all fields in the NewMeasurementData struct are not nil.
 // It returns true if all fields are not nil, and false otherwise.
 //
