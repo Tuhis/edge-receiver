@@ -21,7 +21,7 @@ func TestHandleIncomingEvent(t *testing.T) {
 			name:           "valid request",
 			method:         "POST",
 			url:            "/event",
-			body:           `{"type":"new_measurement","data":{"DataFormat":5,"Temperature":22.34,"Humidity":42.975,"Pressure":97465,"Acceleration":{"X":-8,"Y":-20,"Z":1056},"Battery":2857,"TXPower":4,"Movement":75,"Sequence":6256,"MAC":"E8:D3:AD:C4:6E:18","RSSI":-75,"Address":"E8:D3:AD:C4:6E:18","LocalName":""}}`,
+			body:           `{"type":"new_measurement","source_uuid":"7d01818b-0332-4adf-99c1-13f833e59c6b","data":{"DataFormat":5,"Temperature":22.34,"Humidity":42.975,"Pressure":97465,"Acceleration":{"X":-8,"Y":-20,"Z":1056},"Battery":2857,"TXPower":4,"Movement":75,"Sequence":6256,"MAC":"E8:D3:AD:C4:6E:18","RSSI":-75,"Address":"E8:D3:AD:C4:6E:18","LocalName":""}}`,
 			expectedStatus: http.StatusOK,
 		},
 		{

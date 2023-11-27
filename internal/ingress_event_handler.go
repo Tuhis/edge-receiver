@@ -42,6 +42,12 @@ func CreateIncomingEventHandler(messageChan chan<- string) func(http.ResponseWri
 			return
 		}
 
+		if event.SourceUuid == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			json.NewEncoder(w).Encode(apiresponse.ApiResponse{Message: apiresponse.InvalidRequest})
+			return
+		}
+
 		// Handle different types of events
 		switch event.Type {
 		case events.NewMeasurement:

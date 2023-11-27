@@ -9,8 +9,9 @@ const (
 )
 
 type RuuviEvent struct {
-	Type RuuviEventTypes `json:"type"`
-	Data json.RawMessage `json:"data"`
+	Type       RuuviEventTypes `json:"type"`
+	Data       json.RawMessage `json:"data"`
+	SourceUuid string          `json:"source_uuid"`
 }
 
 type NewMeasurementData struct {
