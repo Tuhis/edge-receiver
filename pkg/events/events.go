@@ -14,6 +14,12 @@ type RuuviEvent struct {
 	SourceUuid string          `json:"source_uuid"`
 }
 
+type RuuviKafkaEvent struct {
+	Type       RuuviEventTypes `json:"type"`
+	Data       interface{}     `json:"data"`
+	SourceUuid string          `json:"source_uuid"`
+}
+
 type NewMeasurementData struct {
 	DataFormat   *int     `json:"DataFormat"`
 	Temperature  *float64 `json:"Temperature"`

@@ -74,7 +74,18 @@ func CreateIncomingEventHandler(messageChan chan<- string) func(http.ResponseWri
 			fmt.Printf("Received new measurement data: %+v\n", data)
 
 			// Send the data to the Kafka messaging channel
-			messageChan <- string(event.Data)
+			kafkaEvent := events.RuuviKafkaEvent{
+				Type:       event.Type,
+				Data:       data,
+				SourceUuid: event.SourceUuid,
+			}
+			kafkaEventJson, err := json.Marshal(kafkaEvent)
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				json.NewEncoder(w).Encode(apiresponse.ApiResponse{Message: apiresponse.InvalidRequest})
+				return
+			}
+			messageChan <- string(kafkaEventJson)
 
 			// Return a response to the client
 			w.WriteHeader(http.StatusOK)
